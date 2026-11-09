@@ -1,0 +1,39 @@
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: campusx
+      POSTGRES_USER: campusx
+      POSTGRES_PASSWORD: campusx_local_dev
+    volumes:
+      - campusx-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U campusx -d campusx"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/campusx
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: campusx
+      SPRING_DATASOURCE_PASSWORD: campusx_local_dev
+      SPRING_JPA_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      JWT_SECRET: change-this-local-demo-secret-before-deployment-2026
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  campusx-postgres:
