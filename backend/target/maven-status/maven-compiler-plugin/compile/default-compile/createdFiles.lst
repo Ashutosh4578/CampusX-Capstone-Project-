@@ -1,0 +1,15 @@
+com\campus\system\model\ContestParticipant.class
+com\campus\system\security\JwtUtil.class
+com\campus\system\config\SecurityConfig.class
+com\campus\system\controller\AuthController.class
+com\campus\system\CampusSystemApplication.class
+com\campus\system\config\DemoDataInitializer.class
+com\campus\system\model\User.class
+com\campus\system\repository\ContestRepository.class
+com\campus\system\controller\ContestController.class
+com\campus\system\model\Contest.class
+com\campus\system\security\JwtAuthenticationFilter.class
+com\campus\system\model\Submission.class
+com\campus\system\repository\ContestParticipantRepository.class
+com\campus\system\repository\UserRepository.class
+com\campus\system\repository\SubmissionRepository.class
