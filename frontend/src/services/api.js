@@ -1,6 +1,11 @@
-const BASE_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:8080/api"
+const rawBaseUrl = (
+  import.meta.env.VITE_API_URL ||
+  "https://campusx-backend-qw91.onrender.com/api"
 ).replace(/\/$/, "");
+
+const BASE_URL = rawBaseUrl.endsWith("/api")
+  ? rawBaseUrl
+  : `${rawBaseUrl}/api`;
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
@@ -14,15 +19,17 @@ async function request(path, options = {}) {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...(options.headers || {})
       },
-      // Prevent the dashboard from remaining on its loading screen forever
-      // when the backend is stopped or a request gets stuck.
-      signal: options.signal || AbortSignal.timeout(12000)
+      signal: options.signal || AbortSignal.timeout(60000)
     });
   } catch (error) {
     if (error?.name === "TimeoutError" || error?.name === "AbortError") {
-      throw new Error("The backend did not respond within 12 seconds. Check that Spring Boot is running on port 8080.");
+      throw new Error(
+        "The backend did not respond within 60 seconds. Please try again in a moment."
+      );
     }
-    throw new Error("Cannot connect to the backend. Start Spring Boot and check that it is running on http://localhost:8080.");
+    throw new Error(
+      "Cannot connect to the backend. Please check the backend URL and server status."
+    );
   }
 
   const raw = await response.text();
