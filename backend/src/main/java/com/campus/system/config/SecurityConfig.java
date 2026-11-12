@@ -1,4 +1,3 @@
-
 package com.campus.system.config;
 
 import com.campus.system.security.JwtAuthenticationFilter;
@@ -43,6 +42,8 @@ public class SecurityConfig {
             )
 
             .authorizeHttpRequests(auth -> auth
+                // Allow browser CORS preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Only login is publicly accessible
                 .requestMatchers(
@@ -86,7 +87,9 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
             "http://localhost:5173",
-            "http://127.0.0.1:5173"
+            "http://127.0.0.1:5173",
+            "https://campusx-frontend.vercel.app",
+            "https://campusx-frontend-iqglzscpz-ashutosh4578.vercel.app"
         ));
 
         config.setAllowedMethods(List.of(
